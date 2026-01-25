@@ -5,11 +5,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 import java.lang.invoke.MethodHandles;
 
 /**
@@ -21,7 +19,7 @@ import java.lang.invoke.MethodHandles;
  * Locators según preferencia:
  * By Id
  * By name
- * By css: https://saucelabs.com/resources/articles/selenium-tips-css-selectors
+ * By css: <a href="https://saucelabs.com/resources/articles/selenium-tips-css-selectors">...</a>
  * By xpath
  * Wait: implicitlyWait vs explicitWait (expected conditions)
  */
@@ -33,10 +31,7 @@ public class WebDriverOptionsTest {
     @BeforeEach
     public void setUp() {
         LOGGER.debug("start testWebDrive");
-        File currentDirFile = new File(".webDriver/chromedriver.exe");
-        System.setProperty ("webdriver.chrome.driver",currentDirFile.getAbsolutePath() );
-        driver = new ChromeDriver();
-        LOGGER.debug("driver started");
+        driver = new FirefoxDriver();
     }
 
     @AfterEach
@@ -46,7 +41,7 @@ public class WebDriverOptionsTest {
     }
 
     @Test
-    public void testWebDrives() throws InterruptedException
+    public void testWebDrives()
     {
         driver.manage().window().maximize();
         LOGGER.debug("driver maximized");
@@ -54,7 +49,7 @@ public class WebDriverOptionsTest {
     }
 
     @Test
-    public void testWebNavigation() throws InterruptedException
+    public void testWebNavigation()
     {
         // TODO-1 navigate to https://the-internet.herokuapp.com
         // TODO-2 get title, url, pagesource
