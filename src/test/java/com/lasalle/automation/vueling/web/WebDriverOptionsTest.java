@@ -7,17 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.function.Function;
 
 /**
  * - Window: get, getTitle, getCurrentUrl, getPageSource, close, quit
@@ -39,40 +37,30 @@ public class WebDriverOptionsTest {
 
     @BeforeEach
     public void setUp() {
-        LOGGER.debug("start testWebDrive");
-        // TODO download from https://www.selenium.dev/ecosystem/
-        File currentDirFile = new File(".webDriver/chromedriver");
-        System.setProperty ("webdriver.chrome.driver",currentDirFile.getAbsolutePath() );
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        LOGGER.debug("driver started");
+        LOGGER.debug("Start testWebDrive");
+        driver = new FirefoxDriver();
     }
 
     @AfterEach
     public void tearDown() {
         driver.quit();
-        LOGGER.debug("driver closed");
+        LOGGER.debug("Driver closed");
     }
 
     @Test
-    public void testExplicitWaitWithFluentWait()
-    {
-        LOGGER.debug("start testWebDrive");
+    public void testExplicitWaitWithFluentWait() {
+        LOGGER.debug("Start testExplicitWaitWithFluentWait");
         driver.get("https://the-internet.herokuapp.com/dynamic_controls");
         driver.findElement(By.cssSelector("#checkbox-example > button")).click();
-        Wait<WebDriver> fluentWait = new FluentWait<WebDriver>(driver)
+        Wait<WebDriver> fluentWait = new FluentWait<>(driver)
                 .withTimeout(Duration.of(60, ChronoUnit.SECONDS))
                 .pollingEvery(Duration.of(2, ChronoUnit.SECONDS))
                 .ignoring(Exception.class);
-        WebElement fluentElement = fluentWait.until(new Function<WebDriver, WebElement>() {
-            @Override
-            public WebElement apply(WebDriver webDriver) {
-                return webDriver.findElement(By.id("message"));
-            }
-        });
-        String fluentElementText = fluentElement.getText();
+        WebElement fluentElement = fluentWait.until(webDriver -> webDriver.findElement(By.id("message")));
         Assertions.assertThat(fluentElement.isDisplayed()).isTrue();
-        LOGGER.debug("finish element, fluentElementText:[{}]", fluentElementText);
+        String fluentElementText = fluentElement.getText();
+        Assertions.assertThat(fluentElementText).isEqualTo("It's gone!");
+        LOGGER.debug("Finish element, fluentElementText:[{}]", fluentElementText);
     }
 
      @Test
