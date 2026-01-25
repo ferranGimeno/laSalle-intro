@@ -7,15 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 /**
  * - Window: get, getTitle, getCurrentUrl, getPageSource, close, quit
@@ -36,35 +38,57 @@ public class WebDriverOptionsTest {
 
     @BeforeEach
     public void setUp() {
-        LOGGER.debug("start testWebDrive");
-        // TODO download from https://www.selenium.dev/ecosystem/
-        // https://googlechromelabs.github.io/chrome-for-testing/
-        File currentDirFile = new File(".webDriver/chromedriver");
-        System.setProperty ("webdriver.chrome.driver",currentDirFile.getAbsolutePath() );
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        LOGGER.debug("driver started");
+        LOGGER.debug("Start testWebDrive");
+        driver = new FirefoxDriver();
     }
 
     @AfterEach
     public void tearDown() {
         driver.quit();
-        LOGGER.debug("driver closed");
+        LOGGER.debug("Driver closed");
     }
 
     @Test
-    public void testWebDrives() {
-        LOGGER.debug("start testWebDrive");
+    public void testExplicitWaitWithFluentWait() {
+        LOGGER.debug("Start testExplicitWaitWithFluentWait");
+        driver.get("https://the-internet.herokuapp.com/dynamic_controls");
+        driver.findElement(By.cssSelector("#checkbox-example > button")).click();
+        Wait<WebDriver> fluentWait = new FluentWait<>(driver)
+                .withTimeout(Duration.of(60, ChronoUnit.SECONDS))
+                .pollingEvery(Duration.of(2, ChronoUnit.SECONDS))
+                .ignoring(Exception.class);
+        WebElement fluentElement = fluentWait.until(webDriver -> webDriver.findElement(By.id("message")));
+        Assertions.assertThat(fluentElement.isDisplayed()).isTrue();
+        String fluentElementText = fluentElement.getText();
+        Assertions.assertThat(fluentElementText).isEqualTo("It's gone!");
+        LOGGER.debug("Finish element, fluentElementText:[{}]", fluentElementText);
+    }
 
+    @Test
+    public void testWebDriveImplicitlyWait() {
+        LOGGER.debug("Start testWebDriveImplicitlyWait");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
+        driver.get("https://the-internet.herokuapp.com/dynamic_controls");
+        driver.findElement(By.cssSelector("#checkbox-example > button")).click();
+        WebElement implicitWaitElement = driver.findElement(By.id("message"));
+        Assertions.assertThat(implicitWaitElement.isDisplayed()).isTrue();
+        String implicitWaitElementText = implicitWaitElement.getText();
+        Assertions.assertThat(implicitWaitElementText).isEqualTo("It's gone!");
+        LOGGER.debug("Finish element, implicitWaitElementText:[{}]", implicitWaitElementText);
+    }
+
+    @Test
+    public void testWaitCondition(){
+        LOGGER.debug("Start testWaitCondition");
         // Esperas - Explícitas WebDriverWait => el elemento existe...
         // pero no es visible o no cumple alguna condición
         driver.get("https://the-internet.herokuapp.com/dynamic_loading/1");
         driver.findElement(By.cssSelector("#start > button")).click();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
-        String text = element.getText();
         Assertions.assertThat(element.isDisplayed()).isTrue();
-        LOGGER.debug("finish element, WebDriverWait, text:[{}]", text);
+        String text = element.getText();
+        Assertions.assertThat(text).isEqualTo("Hello World!");
+        LOGGER.debug("Finish element, WebDriverWait, text:[{}]", text);
     }
-
 }
