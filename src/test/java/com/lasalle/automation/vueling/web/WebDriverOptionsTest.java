@@ -4,16 +4,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 /**
  * - Window: get, getTitle, getCurrentUrl, getPageSource, close, quit
@@ -24,7 +20,7 @@ import java.util.List;
  * Locators según preferencia:
  * By Id
  * By name
- * By css: https://saucelabs.com/resources/articles/selenium-tips-css-selectors
+ * By css: <a href="https://saucelabs.com/resources/articles/selenium-tips-css-selectors">selenium-tips-css-selectors</a>
  * By xpath
  * Wait: implicitlyWait vs explicitWait (expected conditions)
  */
@@ -36,11 +32,7 @@ public class WebDriverOptionsTest {
     @BeforeEach
     public void setUp() {
         LOGGER.debug("start testWebDrive");
-        File currentDirFile = new File(".webDriver/chromedriver.exe");
-        System.setProperty ("webdriver.chrome.driver",currentDirFile.getAbsolutePath() );
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        LOGGER.debug("driver started");
+        driver = new FirefoxDriver();
     }
 
     @AfterEach
@@ -50,11 +42,8 @@ public class WebDriverOptionsTest {
     }
 
     @Test
-    public void testWebDriveNavigation() throws InterruptedException
-    {
-        LOGGER.debug("start testWebDriveNavigation");
-
-        // Navigation
+    public void testWebDriveNavigation() {
+        LOGGER.debug("Start testWebDriveNavigation");
         driver.get("https://the-internet.herokuapp.com");
         driver.getTitle();
         driver.getCurrentUrl();
@@ -64,10 +53,11 @@ public class WebDriverOptionsTest {
         driver.navigate().forward();
         driver.navigate().refresh();
         Assertions.assertThat(driver.getCurrentUrl()).isEqualTo("https://the-internet.herokuapp.com/abtest");
+        LOGGER.debug("Finish testWebDriveNavigation");
     }
 
     @Test
-    public void testSelectors(){
+    public void testSelectors() {
         driver.navigate().to("https://the-internet.herokuapp.com");
         // TODO find element by:
         //              id: page-footer
