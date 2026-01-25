@@ -7,18 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.lang.invoke.MethodHandles;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * - Window: get, getTitle, getCurrentUrl, getPageSource, close, quit
@@ -29,7 +23,7 @@ import java.util.function.Function;
  * Locators según preferencia:
  * By Id
  * By name
- * By css: https://saucelabs.com/resources/articles/selenium-tips-css-selectors
+ * By css: <a href="https://saucelabs.com/resources/articles/selenium-tips-css-selectors">selenium-tips-css-selectors</a>
  * By xpath
  * Wait: implicitlyWait vs explicitWait (expected conditions)
  */
@@ -40,24 +34,33 @@ public class WebDriverOptionsTest {
 
     @BeforeEach
     public void setUp() {
-        LOGGER.debug("start testWebDrive");
-        // TODO download from https://www.selenium.dev/ecosystem/
-        File currentDirFile = new File(".webDriver/chromedriver.exe");
-        System.setProperty ("webdriver.chrome.driver",currentDirFile.getAbsolutePath() );
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        LOGGER.debug("driver started");
+        LOGGER.debug("Start testWebDrive");
+        driver = new FirefoxDriver();
     }
 
     @AfterEach
     public void tearDown() {
         driver.quit();
-        LOGGER.debug("driver closed");
+        LOGGER.debug("Driver closed");
     }
 
     @Test
-    public void testWebDriveSelectors() throws InterruptedException
-    {
+    public void testWebDriveNavigation() {
+        LOGGER.debug("Start testWebDriveNavigation");
+        driver.get("https://the-internet.herokuapp.com");
+        driver.getTitle();
+        driver.getCurrentUrl();
+        driver.getPageSource();
+        driver.navigate().to("https://the-internet.herokuapp.com/abtest");
+        driver.navigate().back();
+        driver.navigate().forward();
+        driver.navigate().refresh();
+        Assertions.assertThat(driver.getCurrentUrl()).isEqualTo("https://the-internet.herokuapp.com/abtest");
+        LOGGER.debug("Finish testWebDriveNavigation");
+    }
+
+    @Test
+    public void testWebDriveSelectors() {
         LOGGER.debug("Start testWebDriveSelectors");
         driver.navigate().to("https://the-internet.herokuapp.com");
         driver.findElement(By.id("page-footer"));
@@ -68,7 +71,6 @@ public class WebDriverOptionsTest {
         driver.switchTo().alert().dismiss();
         List<WebElement> buttons = driver.findElements(By.cssSelector("button"));
         Assertions.assertThat(buttons.size()).isEqualTo(3);
-        LOGGER.debug("selectors ok");
+        LOGGER.debug("Finish testWebDriveSelectors");
     }
-
 }
