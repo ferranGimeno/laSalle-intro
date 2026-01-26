@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,12 @@ public class WebDriverOptionsTest {
 
     @BeforeEach
     public void setUp() {
-        LOGGER.debug("start testWebDrive");
+        LOGGER.debug("Start testWebDrive");
+        // FirefoxOptions options = new FirefoxOptions();
+        // We should be sure that we have the executable
+        // see file $(which firefox)
+        // options.setBinary("/usr/lib/firefox/firefox");
+        // driver = new FirefoxDriver(options);
         driver = new FirefoxDriver();
     }
 
