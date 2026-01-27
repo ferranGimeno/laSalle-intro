@@ -1,7 +1,12 @@
-### Description
-Project to test Selenium framework "a pelo"
+# Learning Selenium "a pelo"
+
+## Description
+Project to test Selenium framework without any additional libraries, to learn how Selenium works "under the hood".
 
 ## Local development
+
+### Browser tests
+These tests start a Firefox via Selenium (you will need Firefox installed locally).
 
 ### Java version
 **This project requires Java 25** (toolchain `languageVersion = 25`).
@@ -38,11 +43,7 @@ This project is built with the Gradle wrapper.
 .\gradlew.bat clean test
 ```
 
-## Selenium / WebDriver setup
-
-These tests start a Firefox via Selenium (you will need Firefox installed locally). 
-
-### Links
+## Links
 * **Git**:  [See the Git best practices](docs/git-best-practices.md).
 * **Java Development Kit**: [See the Java best practices](docs/java-best-practices.md).
 * **Gradle**: Use gradle wrapper.
