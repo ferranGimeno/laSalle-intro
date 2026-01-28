@@ -51,9 +51,20 @@ public class WebDriverOptionsTest {
     @Test
     public void testWebNavigation()
     {
-        // TODO-1 navigate to https://the-internet.herokuapp.com
-        // TODO-2 get title, url, pagesource
-        // TODO-3 navigate to https://the-internet.herokuapp.com/abtest
-        // TODO-4 navigate back, forward, refresh
+        // Navigate to https://the-internet.herokuapp.com
+        driver.get("https://the-internet.herokuapp.com");
+
+        // Get title, url, pagesource
+        String title = driver.getTitle();
+        String currentUrl = driver.getCurrentUrl();
+        String pageSource = driver.getPageSource();
+
+        // Navigate to https://the-internet.herokuapp.com/abtest
+        driver.navigate().to("https://the-internet.herokuapp.com/abtest");
+
+        // Navigate back, forward, refresh
+        driver.navigate().back();
+        driver.navigate().forward();
+        driver.navigate().refresh();
     }
 }
