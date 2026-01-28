@@ -1,10 +1,12 @@
 package com.lasalle.automation.vueling.web;
 
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
@@ -60,15 +62,38 @@ public class WebDriverOptionsTest {
     @Test
     public void testWebDriveNavigation() {
         LOGGER.debug("Start testWebDriveNavigation");
-        // TODO go to url https://the-internet.herokuapp.com
-        // TODO get the title
-        // TODO get the current url
-        // TODO get the page source
-        // TODO navigate to https://the-internet.herokuapp.com/abtest
-        // TODO navigate back
-        // TODO navigate forward
-        // TODO navigate refresh
-        // TODO assert the current url is https://the-internet.herokuapp.com/abtest
+
+        // Go to url https://the-internet.herokuapp.com
+        driver.get("https://the-internet.herokuapp.com");
+
+        // Get the title
+        String title = driver.getTitle();
+        LOGGER.debug("Title: " + title);
+
+        // Get the current url
+        String currentUrl = driver.getCurrentUrl();
+        LOGGER.debug("Current url: " + currentUrl);
+
+        // Get the page source
+        String pageSource = driver.getPageSource();
+        LOGGER.debug("Page source: " + pageSource);
+
+        // Navigate to https://the-internet.herokuapp.com/abtest
+        driver.navigate().to("https://the-internet.herokuapp.com/abtest");
+
+        // Navigate back
+        driver.navigate().back();
+
+        // Navigate forward
+        driver.navigate().forward();
+
+        // Navigate refresh
+        driver.navigate().refresh();
+
+        // Assert the current url is https://the-internet.herokuapp.com/abtest
+        String url = driver.getCurrentUrl();
+        Assertions.assertThat(url).isEqualTo("https://the-internet.herokuapp.com/abtest");
+
         LOGGER.debug("Finish testWebDriveNavigation");
     }
 }
